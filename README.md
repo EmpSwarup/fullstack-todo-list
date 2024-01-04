@@ -1,4 +1,4 @@
-# Full stack todolist app -------------------------------- UNDER DEVELOPMENT --------------------------------
+# Full stack todolist app --- UNDER DEVELOPMENT ---
 
 ## Getting Started
 
