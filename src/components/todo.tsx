@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Task } from "../models/task";
 import { remult } from "remult";
+import { TasksController } from "./TasksController";
 
 const taskRepo = remult.repo(Task);
 
@@ -47,8 +48,7 @@ export default function Todo() {
   }
 
   async function setAllCompleted(completed: boolean) {
-    for (const task of await taskRepo.find()) {
-      await taskRepo.save({...task, completed})
+    TasksController.setAllCompleted(completed);
   }
 
   return (
@@ -76,7 +76,7 @@ export default function Todo() {
             </div>
           );
         })}
-         <div>
+        <div>
           <button onClick={() => setAllCompleted(true)}>
             Set all Completed
           </button>
