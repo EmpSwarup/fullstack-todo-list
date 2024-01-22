@@ -10,7 +10,16 @@ export default function Todo() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
-    taskRepo.find().then(setTasks);
+    taskRepo
+      .find({
+        orderBy: {
+          createdAt: "asc",
+        },
+        where: {
+          completed: undefined,
+        },
+      })
+      .then(setTasks);
   }, []);
   return (
     <div>
