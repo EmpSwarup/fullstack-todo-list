@@ -2,8 +2,9 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { Task } from "../models/task";
-import { remult } from "remult";
+import { UserInfo, remult } from "remult";
 import { TasksController } from "./TasksController";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 const taskRepo = remult.repo(Task);
 
@@ -51,6 +52,7 @@ export default function Todo() {
     TasksController.setAllCompleted(completed);
   }
 
+  if (session.status !== "authenticated") return <></>;
   return (
     <div>
       <h1>Todos {tasks.length}</h1>

@@ -1,10 +1,11 @@
-import styles from "./page.module.css";
+"use client";
+import { SessionProvider } from "next-auth/react";
 import Todo from "../components/todo";
 
 export default function Home() {
   return (
-    <main className={styles.main}>
+    <SessionProvider>
       <Todo />
-    </main>
+    </SessionProvider>
   );
 }
