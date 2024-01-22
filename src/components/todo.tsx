@@ -11,19 +11,23 @@ const taskRepo = remult.repo(Task);
 export default function Todo() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState("");
+  const session = useSession();
 
   useEffect(() => {
-    return taskRepo
-      .liveQuery({
-        orderBy: {
-          createdAt: "asc",
-        },
-        where: {
-          completed: undefined,
-        },
-      })
-      .subscribe((info) => setTasks(info.applyChanges));
-  }, []);
+    remult.user = session.data?.user as UserInfo;
+    if (session.status === "unauthenticated") signIn();
+    else if (session.status === "authenticated")
+      return taskRepo
+        .liveQuery({
+          orderBy: {
+            createdAt: "asc",
+          },
+          where: {
+            completed: undefined,
+          },
+        })
+        .subscribe((info) => setTasks(info.applyChanges));
+  }, [session]);
   async function addTask(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
@@ -38,7 +42,6 @@ export default function Todo() {
     const updatedTask = await taskRepo.save({ ...task, completed });
     setTasks(tasks.map((t) => (t == task ? updatedTask : t)));
   }
-
   async function deleteTask(task: Task) {
     try {
       await taskRepo.delete(task);
@@ -51,23 +54,28 @@ export default function Todo() {
   async function setAllCompleted(completed: boolean) {
     TasksController.setAllCompleted(completed);
   }
-
   if (session.status !== "authenticated") return <></>;
   return (
     <div>
       <h1>Todos {tasks.length}</h1>
       <main>
-        <form onSubmit={addTask}>
-          <input
-            value={newTaskTitle}
-            placeholder="What needs to be done?"
-            onChange={(e) => setNewTaskTitle(e.target.value)}
-          />
-          <button>Add</button>
-        </form>
+        <div>
+          <span>Hello {remult.user?.name}</span>
+          <button onClick={() => signOut()}>Sign out</button>
+        </div>
+        {taskRepo.metadata.apiInsertAllowed() && (
+          <form onSubmit={addTask}>
+            <input
+              value={newTaskTitle}
+              placeholder="What needs to be done?"
+              onChange={(e) => setNewTaskTitle(e.target.value)}
+            />
+            <button>Add</button>
+          </form>
+        )}
         {tasks.map((task) => {
           return (
-            <div className={task.id}>
+            <div key={task.id}>
               <input
                 type="checkbox"
                 checked={task.completed}
