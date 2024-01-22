@@ -11,8 +11,8 @@ export default function Todo() {
   const [newTaskTitle, setNewTaskTitle] = useState("");
 
   useEffect(() => {
-    taskRepo
-      .find({
+    return taskRepo
+      .liveQuery({
         orderBy: {
           createdAt: "asc",
         },
@@ -20,7 +20,7 @@ export default function Todo() {
           completed: undefined,
         },
       })
-      .then(setTasks);
+      .subscribe((info) => setTasks(info.applyChanges));
   }, []);
   async function addTask(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -44,6 +44,11 @@ export default function Todo() {
     } catch (err: any) {
       alert(err.message);
     }
+  }
+
+  async function setAllCompleted(completed: boolean) {
+    for (const task of await taskRepo.find()) {
+      await taskRepo.save({...task, completed})
   }
 
   return (
@@ -71,6 +76,14 @@ export default function Todo() {
             </div>
           );
         })}
+         <div>
+          <button onClick={() => setAllCompleted(true)}>
+            Set all Completed
+          </button>
+          <button onClick={() => setAllCompleted(false)}>
+            Set all UnCompleted
+          </button>
+        </div>
       </main>
     </div>
   );
