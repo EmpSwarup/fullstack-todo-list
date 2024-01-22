@@ -1,12 +1,17 @@
-import { Entity, Fields } from "remult";
+import { Allow, Entity, Fields } from "remult";
 
 @Entity("tasks", {
-  allowApiCrud: true,
+  allowApiCrud: Allow.authenticated,
+  allowApiInsert: "admin",
 })
 export class Task {
   @Fields.cuid()
   id = "";
-  @Fields.string()
+  @Fields.string<Task>({
+    validate: (task) => {
+      if (task.title.length < 2) throw Error("Too short");
+    },
+  })
   title = "";
   @Fields.boolean()
   completed = false;
