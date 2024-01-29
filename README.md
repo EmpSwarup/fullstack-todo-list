@@ -1,4 +1,6 @@
-# Full stack todolist app --- UNDER DEVELOPMENT ---
+# Full stack todolist app
+
+A fullstack todolist app made using Next JS and SQL for database.
 
 ## Getting Started
 
@@ -22,3 +24,11 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - SQL
 - Remult
 - Next Auth
+
+## Screenshots
+
+Login page
+![App Screenshot](https://github.com/EmpSwarup/fullstack-todo-list/blob/main/src/screenshots/2.png?raw=true)
+
+Todolist
+![App Screenshot](https://github.com/EmpSwarup/fullstack-todo-list/blob/main/src/screenshots/1.png?raw=true)
